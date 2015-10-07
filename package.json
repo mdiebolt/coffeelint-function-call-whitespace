@@ -1,0 +1,40 @@
+{
+  "name": "coffeelint-function-call-whitespace",
+  "version": "0.1.0",
+  "description": "Coffeelint rule to ensure there is no whitespace between the first and last parentheses of a function call and its arguments",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --compilers coffee:coffee-script/register test/*.coffee"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mdiebolt/coffeelint-function-call-whitespace.git"
+  },
+  "keywords": [
+    "coffeelint",
+    "lint",
+    "coffeelintrule",
+    "function call"
+  ],
+  "author": "Matt Diebolt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mdiebolt/coffeelint-function-call-whitespace/issues"
+  },
+  "homepage": "https://github.com/mdiebolt/coffeelint-function-call-whitespace",
+  "peerDependencies": {
+    "coffeelint": "^1"
+  },
+  "devDependencies": {
+    "chai": "1.6.0",
+    "coffee-script": "~1.7.0",
+    "coffeelint": "1.5.1",
+    "gulp": "3.6.2",
+    "gulp-bump": "^0.1.8",
+    "gulp-coffee": "^1.4.3",
+    "gulp-mocha": "^0.4.1",
+    "gulp-mocha-phantomjs": "0.10.1",
+    "mocha": "1.9.0",
+    "mocha-phantomjs": "2.0.1"
+  }
+}
