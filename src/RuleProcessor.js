@@ -1,19 +1,18 @@
 (function() {
-  var RuleProcessor, argumentNotCorrectlySpaced, checkCloseParenSpacing, checkFunctionArgumentSpacing;
+  var RuleProcessor, checkArgumentSpacing, checkCloseParenSpacing, isArgumentIncorrectlySpaced;
 
-  argumentNotCorrectlySpaced = function(token) {
+  isArgumentIncorrectlySpaced = function(token) {
     return token[0] === "," && !(token.spaced || token.newLine);
   };
 
-  checkFunctionArgumentSpacing = function(tokenApi) {
+  checkArgumentSpacing = function(tokenApi) {
     var i, insideFunctionCall, isLintingError, nextToken;
-    isLintingError = null;
     i = 1;
     insideFunctionCall = true;
     while (insideFunctionCall) {
       nextToken = tokenApi.peek(i);
       i += 1;
-      if (argumentNotCorrectlySpaced(nextToken)) {
+      if (isArgumentIncorrectlySpaced(nextToken)) {
         isLintingError = true;
       }
       insideFunctionCall = nextToken[0] !== "CALL_END";
@@ -23,7 +22,6 @@
 
   checkCloseParenSpacing = function(token, tokenApi) {
     var isLintingError, previousToken;
-    isLintingError = null;
     previousToken = tokenApi.peek(-1);
     if (previousToken.spaced) {
       if (token.generated) {
@@ -50,18 +48,17 @@
     RuleProcessor.prototype.tokens = ["CALL_START", "CALL_END"];
 
     RuleProcessor.prototype.lintToken = function(token, tokenApi) {
-      var currentToken, isArgumentSpacingError, isClosingParenError, isOpeningParenError;
-      isOpeningParenError = isClosingParenError = isArgumentSpacingError = null;
-      currentToken = token[0];
-      if (currentToken === "CALL_START") {
+      var isArgumentError, isClosingParenError, isOpeningParenError, tokenType;
+      tokenType = token[0];
+      if (tokenType === "CALL_START") {
         if (token.spaced) {
           isOpeningParenError = true;
         }
-        isArgumentSpacingError = checkFunctionArgumentSpacing(tokenApi);
-      } else if (currentToken === "CALL_END") {
+        isArgumentError = checkArgumentSpacing(tokenApi);
+      } else if (tokenType === "CALL_END") {
         isClosingParenError = checkCloseParenSpacing(token, tokenApi);
       }
-      return isOpeningParenError || isClosingParenError || isArgumentSpacingError;
+      return isOpeningParenError || isArgumentError || isClosingParenError;
     };
 
     return RuleProcessor;

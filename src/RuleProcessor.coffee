@@ -1,25 +1,24 @@
-argumentNotCorrectlySpaced = (token) ->
+isArgumentIncorrectlySpaced = (token) ->
   token[0] == "," && !(token.spaced || token.newLine)
 
-checkFunctionArgumentSpacing = (tokenApi) ->
-  isLintingError = null
-
+checkArgumentSpacing = (tokenApi) ->
   i = 1
   insideFunctionCall = true
   while insideFunctionCall
     nextToken = tokenApi.peek(i)
     i += 1
 
-    isLintingError = true if argumentNotCorrectlySpaced(nextToken)
+    isLintingError = true if isArgumentIncorrectlySpaced(nextToken)
     insideFunctionCall = nextToken[0] != "CALL_END"
 
   isLintingError
 
 checkCloseParenSpacing = (token, tokenApi) ->
-  isLintingError = null
-
   previousToken = tokenApi.peek(-1)
   if previousToken.spaced
+    # In this case, the user is omitting parens
+    # It's a linting error if the previous and
+    # current tokens aren't in the same position
     if token.generated
       unless token[2].last_column == previousToken[2].last_column
         isLintingError = true
@@ -44,21 +43,19 @@ class RuleProcessor
         </code>
       </pre>
       Function call whitespace is ignored by default since it's a purely stylistic preference.
-      """
+    """
 
-  tokens: [ "CALL_START", "CALL_END" ]
+  tokens: ["CALL_START", "CALL_END"]
 
   lintToken: (token, tokenApi) ->
-    isOpeningParenError = isClosingParenError = isArgumentSpacingError = null
-
-    currentToken = token[0]
-    if currentToken == "CALL_START"
+    tokenType = token[0]
+    if tokenType == "CALL_START"
       isOpeningParenError = true if token.spaced
 
-      isArgumentSpacingError = checkFunctionArgumentSpacing(tokenApi)
-    else if currentToken == "CALL_END"
+      isArgumentError = checkArgumentSpacing(tokenApi)
+    else if tokenType == "CALL_END"
       isClosingParenError = checkCloseParenSpacing(token, tokenApi)
 
-    return isOpeningParenError || isClosingParenError || isArgumentSpacingError
+    isOpeningParenError || isArgumentError || isClosingParenError
 
 module.exports = RuleProcessor
