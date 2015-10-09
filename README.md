@@ -1,7 +1,7 @@
 # coffeelint-function-call-whitespace
 =====================================
 
-Influenced by built in Coffeelint rule [no_implicit_parens](https://github.com/clutchski/coffeelint/blob/5d818a5a4b4310cc147614e54d972b23f47cad88/src/rules/no_implicit_parens.coffee)
+Influenced by built-in Coffeelint rule [no_implicit_parens](https://github.com/clutchski/coffeelint/blob/5d818a5a4b4310cc147614e54d972b23f47cad88/src/rules/no_implicit_parens.coffee)
 
 This is a plugin for Coffeelint. It enforces conventions about whitespace used when invoking functions.
 

@@ -36,6 +36,9 @@ describe "FunctionCallWhitespace", ->
   it "doesn't error when no parens are used in the function call", ->
     expect("product 4, 5").not.to.be.a.lintingError()
 
+  it "doesn't error when function is called with no arguments", ->
+    expect("zero()").not.to.be.a.lintingError()
+
   describe "object literal variations", ->
     describe "object literal as second argument", ->
       it "doesn't error when parens are used and braces are omitted", ->
@@ -69,6 +72,10 @@ describe "FunctionCallWhitespace", ->
           expect(code).not.to.be.a.lintingError()
 
       describe "without surrounding parens", ->
+        it "doesn't error when followed by if statement", ->
+          code = "divide 4, x unless x == 0"
+          expect(code).not.to.be.a.lintingError()
+
         it "doesn't error when function call is one line with braces", ->
           code = "quotient {numerator: 2, denominator: 4}"
           expect(code).not.to.be.a.lintingError()

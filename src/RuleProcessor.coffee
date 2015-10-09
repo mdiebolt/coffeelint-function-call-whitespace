@@ -13,7 +13,20 @@ checkFunctionArgumentSpacing = (tokenApi) ->
     isLintingError = true if argumentNotCorrectlySpaced(nextToken)
     insideFunctionCall = nextToken[0] != "CALL_END"
 
-  return isLintingError
+  isLintingError
+
+checkCloseParenSpacing = (token, tokenApi) ->
+  isLintingError = null
+
+  previousToken = tokenApi.peek(-1)
+  if previousToken.spaced
+    if token.generated
+      unless token[2].last_column == previousToken[2].last_column
+        isLintingError = true
+    else
+      isLintingError = true
+
+  isLintingError
 
 class RuleProcessor
   rule:
@@ -23,11 +36,12 @@ class RuleProcessor
     description: """
       This rule forces function calls to have no whitespace between the first and last parens and their arguments.
       <pre>
-      <code># Some folks invoke functions like this
-      fn( a, b, c )
-      # but we prefer they're invoked like this
-      myFunction(a, b, c)
-      </code>
+        <code>
+          # Some folks invoke functions like this
+          fn( a, b, c )
+          # but we prefer they're invoked like this
+          myFunction(a, b, c)
+        </code>
       </pre>
       Function call whitespace is ignored by default since it's a purely stylistic preference.
       """
@@ -35,16 +49,16 @@ class RuleProcessor
   tokens: [ "CALL_START", "CALL_END" ]
 
   lintToken: (token, tokenApi) ->
-    isOuterParenError = argumentSpacingError = null
+    isOpeningParenError = isClosingParenError = isArgumentSpacingError = null
 
     currentToken = token[0]
     if currentToken == "CALL_START"
-      isOuterParenError = true if token.spaced
+      isOpeningParenError = true if token.spaced
 
-      argumentSpacingError = checkFunctionArgumentSpacing(tokenApi)
+      isArgumentSpacingError = checkFunctionArgumentSpacing(tokenApi)
     else if currentToken == "CALL_END"
-      isOuterParenError = true if tokenApi.peek(-1).spaced
+      isClosingParenError = checkCloseParenSpacing(token, tokenApi)
 
-    return isOuterParenError || argumentSpacingError
+    return isOpeningParenError || isClosingParenError || isArgumentSpacingError
 
 module.exports = RuleProcessor

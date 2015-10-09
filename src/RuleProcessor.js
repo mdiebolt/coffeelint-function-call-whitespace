@@ -1,5 +1,5 @@
 (function() {
-  var RuleProcessor, argumentNotCorrectlySpaced, checkFunctionArgumentSpacing;
+  var RuleProcessor, argumentNotCorrectlySpaced, checkCloseParenSpacing, checkFunctionArgumentSpacing;
 
   argumentNotCorrectlySpaced = function(token) {
     return token[0] === "," && !(token.spaced || token.newLine);
@@ -21,6 +21,22 @@
     return isLintingError;
   };
 
+  checkCloseParenSpacing = function(token, tokenApi) {
+    var isLintingError, previousToken;
+    isLintingError = null;
+    previousToken = tokenApi.peek(-1);
+    if (previousToken.spaced) {
+      if (token.generated) {
+        if (token[2].last_column !== previousToken[2].last_column) {
+          isLintingError = true;
+        }
+      } else {
+        isLintingError = true;
+      }
+    }
+    return isLintingError;
+  };
+
   RuleProcessor = (function() {
     function RuleProcessor() {}
 
@@ -34,20 +50,18 @@
     RuleProcessor.prototype.tokens = ["CALL_START", "CALL_END"];
 
     RuleProcessor.prototype.lintToken = function(token, tokenApi) {
-      var argumentSpacingError, currentToken, isOuterParenError;
-      isOuterParenError = argumentSpacingError = null;
+      var currentToken, isArgumentSpacingError, isClosingParenError, isOpeningParenError;
+      isOpeningParenError = isClosingParenError = isArgumentSpacingError = null;
       currentToken = token[0];
       if (currentToken === "CALL_START") {
         if (token.spaced) {
-          isOuterParenError = true;
+          isOpeningParenError = true;
         }
-        argumentSpacingError = checkFunctionArgumentSpacing(tokenApi);
+        isArgumentSpacingError = checkFunctionArgumentSpacing(tokenApi);
       } else if (currentToken === "CALL_END") {
-        if (tokenApi.peek(-1).spaced) {
-          isOuterParenError = true;
-        }
+        isClosingParenError = checkCloseParenSpacing(token, tokenApi);
       }
-      return isOuterParenError || argumentSpacingError;
+      return isOpeningParenError || isClosingParenError || isArgumentSpacingError;
     };
 
     return RuleProcessor;
