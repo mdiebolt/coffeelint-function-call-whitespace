@@ -32,7 +32,7 @@ class RuleProcessor
   rule:
     name: "function_call_whitespace"
     level: "ignore"
-    message: "Functions may not be invoked with whitespace before the first param or after the last"
+    message: "Functions must be invoked without whitespace before the first param or after the last and one space between arguments"
     description: """
       This rule forces function calls to have no whitespace between the first and last parens and their arguments.
       <pre>

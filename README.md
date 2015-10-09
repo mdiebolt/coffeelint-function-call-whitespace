@@ -21,8 +21,7 @@ sum( 2, 4 )
 
 ## Installation
 
-1. `npm install coffeelint-function-call-whitespace --save-dev`
-1. `npm install`
+`npm install coffeelint-function-call-whitespace --save-dev`
 
 ## Configuration
 

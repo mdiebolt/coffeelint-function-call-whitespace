@@ -43,8 +43,8 @@
     RuleProcessor.prototype.rule = {
       name: "function_call_whitespace",
       level: "ignore",
-      message: "Functions may not be invoked with whitespace before the first param or after the last",
-      description: "This rule forces function calls to have no whitespace between the first and last parens and their arguments.\n<pre>\n<code># Some folks invoke functions like this\nfn( a, b, c )\n# but we prefer they're invoked like this\nmyFunction(a, b, c)\n</code>\n</pre>\nFunction call whitespace is ignored by default since it's a purely stylistic preference."
+      message: "Functions must be invoked without whitespace before the first param or after the last and one space between arguments",
+      description: "This rule forces function calls to have no whitespace between the first and last parens and their arguments.\n<pre>\n  <code>\n    # Some folks invoke functions like this\n    fn( a, b, c )\n    # but we prefer they're invoked like this\n    myFunction(a, b, c)\n  </code>\n</pre>\nFunction call whitespace is ignored by default since it's a purely stylistic preference."
     };
 
     RuleProcessor.prototype.tokens = ["CALL_START", "CALL_END"];

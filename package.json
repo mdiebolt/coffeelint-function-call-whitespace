@@ -1,6 +1,6 @@
 {
   "name": "coffeelint-function-call-whitespace",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Coffeelint rule to ensure there is no whitespace between the first and last parentheses of a function call and its arguments",
   "main": "index.js",
   "scripts": {
