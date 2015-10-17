@@ -30,11 +30,10 @@ In `coffeelint.json` add
 ```json
 {
   "//": "other lint rules",
-  {
-    "function_call_whitespace": {
-      "module": "coffeelint-function-call-whitespace",
-      "level": "error"
-    }
+
+  "function_call_whitespace": {
+    "module": "coffeelint-function-call-whitespace",
+    "level": "error"
   }
 }
 ```
